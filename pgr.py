@@ -7,7 +7,16 @@ import requests
 
 def requestpw(payload):
     url = 'https://passwordinator.herokuapp.com'
-    response = requests.get(url, params=payload)
+    try:
+        response = requests.get(url, params=payload)
+        #print("Status code: " + str(response.status_code))
+        #print("Json returned: " + str(response.json()))
+        if str(response.status_code) == '200':
+            response = str(response.json())
+        else:
+            response = "API returned non-200 code"
+    except: 
+        response = "Error calling api"
     return response
 
 class PromptLoop(Cmd):
@@ -20,8 +29,7 @@ class PromptLoop(Cmd):
             'len': 5
         }
         req = requestpw(payload)
-        print("Status code: " + str(req.status_code))
-        print("Json returned: " + str(req.json()))
+        print("API returned: " + req)
         return False   
 
     def do_exit(self, inp):
