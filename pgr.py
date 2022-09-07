@@ -24,16 +24,31 @@ def requestpw(payload):
     return response, iserror
 
 def formpayload(input):
-        ##inpsplit = inp.split('--')
-        ##print("Split: " + str(inpsplit))
-        ###inp = inp.strip()
-        ###print("Split: " + str(inp.split('--')))
-        ####dsplit = dict(x.split("=") for x in inp.split('--'))
-        ####print("Split: " + str(dsplit))
-    payload = {
-    'len': 5
-    }
-    # payload = input
+    inp = input.strip()
+    inpsplit = inp.split('--')
+    payload = {}
+    for inparg in inpsplit:
+        if inparg.startswith('len'):
+            # add to payload
+            payload['len'] = inparg.split(' ')[1]
+
+        elif inparg.startswith('caps'):
+            # add to payload
+            payload['caps'] = 'true'
+
+        elif inparg.startswith('num'):
+            # add to payload
+            payload['num'] = 'true'
+
+        elif inparg.startswith('char'):
+            # add to payload
+            payload['char'] = 'true'
+
+    #print("Split: " + str(inpsplit))
+    #print("Payload: ")
+    #for k, v in payload.items():
+    #    print(k, v)
+
     return payload
 
 # main CLI prompt loop
