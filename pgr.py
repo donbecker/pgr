@@ -7,7 +7,7 @@ import requests
 
 def requestpw(payload):
     url = 'https://passwordinator.herokuapp.com'
-    response = requests.get(url)
+    response = requests.get(url, params=payload)
     return response
 
 class PromptLoop(Cmd):
@@ -16,10 +16,10 @@ class PromptLoop(Cmd):
 
     def do_getpw(self, inp):
         printft('TODO: implement getting password....')
-        #req = requests.get('https://passwordinator.herokuapp.com')
-        # limit to 5 works
-        #req = requests.get('https://passwordinator.herokuapp.com?len=5')
-        req = requestpw('')
+        payload = {
+            'len': 5
+        }
+        req = requestpw(payload)
         print("Status code: " + str(req.status_code))
         print("Json returned: " + str(req.json()))
         return False   
