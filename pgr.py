@@ -4,20 +4,23 @@ from prompt_toolkit import print_formatted_text as printft
 from prompt_toolkit.formatted_text import FormattedText
 from prompt_toolkit.styles import Style
 import requests
+import json
 
 def requestpw(payload):
     url = 'https://passwordinator.herokuapp.com'
     try:
         response = requests.get(url, params=payload)
-        #print("Status code: " + str(response.status_code))
-        #print("Json returned: " + str(response.json()))
         if str(response.status_code) == '200':
-            response = str(response.json())
+            resjson = response.json()
+            response = resjson['data']
+            iserror = False
         else:
             response = "API returned non-200 code"
+            iserror = True
     except: 
         response = "Error calling api"
-    return response
+        iserror = True
+    return response, iserror
 
 class PromptLoop(Cmd):
     prompt = 'pgr>'
@@ -28,8 +31,11 @@ class PromptLoop(Cmd):
         payload = {
             'len': 5
         }
-        req = requestpw(payload)
-        print("API returned: " + req)
+        req, reterror = requestpw(payload)
+        if not reterror:
+            print("Password returned: " + req)
+        else: 
+            print("Error retrieving password, please try again")
         return False   
 
     def do_exit(self, inp):
