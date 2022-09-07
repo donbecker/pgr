@@ -5,6 +5,7 @@ from prompt_toolkit.formatted_text import FormattedText
 from prompt_toolkit.styles import Style
 import requests
 import json
+import time
 
 # requests a password from API
 def requestpw(payload):
@@ -58,7 +59,7 @@ class PromptLoop(Cmd):
 
     # handles getpw ('get password') command
     def do_getpw(self, inp):
-        printft('You typed ' + inp)
+        #printft('You typed ' + inp)
         payload = formpayload(inp)
         req, reterror = requestpw(payload)
         if not reterror:
@@ -66,6 +67,28 @@ class PromptLoop(Cmd):
         else: 
             print("Error retrieving password, please try again")
         return False   
+
+    def do_getbatch(self, inp):
+        #printft('You typed ' + inp)
+
+        if not inp.isdigit():
+            print("Error: count for batch must be positive integer")
+            return False
+        else: 
+            pwlist = []
+            for c in range(int(inp)):
+                 payload = formpayload('')
+                 req, reterror = requestpw(payload)
+                 if not reterror:
+                     print("Password returned: " + req)
+                     pwlist.append(req)
+                     time.sleep(3)
+                 else: 
+                     print("Error retrieving password, please try again")
+            print("Password Batch: ")
+            for pw in pwlist:
+                print(pw)
+            return False 
 
     # handles exiting CLI prompt loop
     def do_exit(self, inp):
